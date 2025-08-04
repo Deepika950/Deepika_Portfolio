@@ -1982,12 +1982,12 @@
                 <div class="contact-form">
                     <h3>Send Me a Message</h3>
                     <form action="https://formsubmit.co/deepikaenaganoori@gmail.com" method="POST">
-                        <!-- FormSubmit Configuration -->
-                        <input type="hidden" name="_subject" value="New message from your portfolio!">
-                        <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_next" value="https://Deepika950.github.io/Deepika_Portfolio/index.html/thank-you.html">
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="text" name="_honey" style="display:none">  <!-- Anti-spam -->
+                        <!-- Remove FormSubmit's default behavior -->
+                        <input type="hidden" name="_template" value="basic">
+                        <input type="hidden" name="_autoresponse" value=" ">
+                        
+                        <!-- Custom redirect to your about section -->
+                        <input type="hidden" name="_next" value="https://yourusername.github.io/yourrepo#about">
                         
                         <!-- Form Fields -->
                         <div class="form-group">
