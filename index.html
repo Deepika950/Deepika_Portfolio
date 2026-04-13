@@ -9,11 +9,34 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
+            // Theme Toggle Logic
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+
             // Mobile Menu
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mainNav = document.getElementById('main-nav');
             if (mobileMenuBtn && mainNav) {
                 mobileMenuBtn.addEventListener('click', () => mainNav.classList.toggle('active'));
+            }
+
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            if (themeToggleBtn) {
+                const themeIcon = themeToggleBtn.querySelector('i');
+                if (currentTheme === 'light') themeIcon.classList.replace('fa-moon', 'fa-sun');
+                
+                themeToggleBtn.addEventListener('click', () => {
+                    let theme = document.documentElement.getAttribute('data-theme');
+                    if (theme === 'light') {
+                        document.documentElement.removeAttribute('data-theme');
+                        localStorage.setItem('theme', 'dark');
+                        themeIcon.classList.replace('fa-sun', 'fa-moon');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                        localStorage.setItem('theme', 'light');
+                        themeIcon.classList.replace('fa-moon', 'fa-sun');
+                    }
+                });
             }
 
             // Smooth scrolling
@@ -223,6 +246,25 @@
             --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
             --glass-border: 1px solid rgba(255, 255, 255, 0.08);
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            --header-bg: rgba(11, 17, 32, 0.85);
+        }
+
+        [data-theme="light"] {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary: #059669;
+            --dark: #f8fafc;
+            --dark-surface: rgba(255, 255, 255, 0.85);
+            --light: #0f172a;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent: #0284c7;
+            --gradient: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+            --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --header-bg: rgba(255, 255, 255, 0.85);
         }
 
         * {
@@ -237,6 +279,7 @@
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         h1,
@@ -269,7 +312,7 @@
 
         /* Header */
         header {
-            background: rgba(11, 17, 32, 0.85);
+            background: var(--header-bg);
             backdrop-filter: blur(12px);
             border-bottom: var(--glass-border);
             position: fixed;
@@ -289,7 +332,7 @@
         .logo {
             font-size: 1.6rem;
             font-weight: 800;
-            color: white;
+            color: var(--text-primary);
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
@@ -315,6 +358,25 @@
         nav a:hover {
             color: var(--accent);
             background: rgba(255, 255, 255, 0.05);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(130, 130, 130, 0.15);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
         }
 
         .mobile-menu-btn {
@@ -388,7 +450,7 @@
             font-weight: 800;
             margin-bottom: 10px;
             line-height: 1.1;
-            color: white;
+            color: var(--text-primary);
             animation: slideUp 0.8s ease-out 0.4s both;
         }
 
@@ -518,7 +580,7 @@
             position: absolute;
             width: 60px;
             height: 4px;
-            background: var(--primary);
+            background: var(--gradient);
             bottom: -12px;
             left: 50%;
             transform: translateX(-50%);
@@ -772,8 +834,8 @@
 
         .project-card:hover {
             transform: translateY(-10px);
-            border-color: rgba(37, 99, 235, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary);
+            box-shadow: var(--hover-shadow);
         }
 
         .project-img {
@@ -895,8 +957,8 @@
         .certificate-card.active {
             transform: scale(1.05);
             z-index: 2;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(37, 99, 235, 0.4);
+            box-shadow: var(--hover-shadow);
+            border: 1px solid var(--primary-light);
         }
 
         .certificate-front,
@@ -1461,9 +1523,14 @@
                 <a href="#achievements">Achievements</a>
                 <a href="#contact">Contact</a>
             </nav>
-            <button class="mobile-menu-btn" id="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="theme-toggle" id="theme-toggle" title="Toggle Light/Dark Theme">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -1698,6 +1765,32 @@
 
             <div class="projects-grid">
                 <div class="project-card reveal">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                        alt="LeavePortal" class="project-img">
+                    <div class="project-content">
+                        <h3>LeavePortal – Online Leave System</h3>
+                        <p>Developed an online system for employees to submit and track leave requests with admin
+                            access.</p>
+
+                        <div class="project-tech">
+                            <span class="tech-tag">Django</span>
+                            <span class="tech-tag">HTML/CSS</span>
+                            <span class="tech-tag">SQLite</span>
+                            <span class="tech-tag">Bootstrap</span>
+                        </div>
+
+                        <div class="project-links">
+                            <a href="https://github.com/Deepika950/Leave-Management-System" class="project-link" target="_blank">
+                                View Code <i class="fab fa-github"></i>
+                            </a>
+                            <a href="http://svreclms.gitsglobal.in/" class="project-link" target="_blank">
+                                Live Demo <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card reveal">
                     <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
                         alt="AgriPredict" class="project-img">
                     <div class="project-content">
@@ -1720,32 +1813,6 @@
                             </a>
                             <a href="https://crop-recommendation-system-application-dw8d.onrender.com/"
                                 class="project-link">
-                                Live Demo <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card reveal">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                        alt="LeavePortal" class="project-img">
-                    <div class="project-content">
-                        <h3>LeavePortal – Online Leave System</h3>
-                        <p>Developed an online system for employees to submit and track leave requests with admin
-                            access.</p>
-
-                        <div class="project-tech">
-                            <span class="tech-tag">Django</span>
-                            <span class="tech-tag">HTML/CSS</span>
-                            <span class="tech-tag">SQLite</span>
-                            <span class="tech-tag">Bootstrap</span>
-                        </div>
-
-                        <div class="project-links">
-                            <a href="#" class="project-link">
-                                View Code <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="project-link">
                                 Live Demo <i class="fas fa-external-link-alt"></i>
                             </a>
                         </div>
@@ -1845,6 +1912,27 @@
                 <div class="certificates-track">
                     <!-- Certificate Cards -->
                     <div class="certificate-card active">
+                        <div class="certificate-front">
+                            <div class="certificate-badge">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <h3>Full Stack Internship</h3>
+                            <p>GITS Global</p>
+                            <div class="view-btn">View Certificate</div>
+                        </div>
+                        <div class="certificate-back">
+                            <img src="https://raw.githubusercontent.com/Deepika950/Deepika_Portfolio/main/assets/images/internship_certificate_gits.png"
+                                alt="GITS Global Internship">
+                            <div class="certificate-actions">
+                                <a href="https://raw.githubusercontent.com/Deepika950/Deepika_Portfolio/main/assets/images/internship_certificate_gits.png"
+                                    target="_blank" class="zoom-btn">
+                                    <i class="fas fa-expand"></i> Expand
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="certificate-card">
                         <div class="certificate-front">
                             <div class="certificate-badge">
                                 <i class="fas fa-certificate"></i>
